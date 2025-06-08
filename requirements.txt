@@ -1,0 +1,7 @@
+pandas
+jupyter
+nltk
+fastparquet
+torch
+transformers
+vicinity
