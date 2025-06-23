@@ -181,3 +181,4 @@ __pycache__/
 *.csv  # Optional: Wenn Sie Rohdaten nicht im Git-Repo speichern wollen, sondern nur eine Anleitung zum Download geben
 *.zip  # Heruntergeladene Zip-Dateien
 /data/immo_data.csv
+data/immo_data.csv
