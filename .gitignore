@@ -182,3 +182,4 @@ __pycache__/
 *.zip  # Heruntergeladene Zip-Dateien
 /data/immo_data.csv
 data/immo_data.csv
+data/immo_data.csv
