@@ -79,5 +79,4 @@ Befolgen Sie diese Schritte, um das Projekt lokal einzurichten und das Notebook 
 -   Einsatz von Kreuzvalidierung.
 -   Erstellung einer einfachen Web-Anwendung zur Mietpreisvorhersage.
 
-
 ---
