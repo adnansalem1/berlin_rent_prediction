@@ -1,111 +1,208 @@
+# 🏙️ Mietpreis-Vorhersage für Berlin: Ein End-to-End Machine Learning Projekt
 
-# 🏙️ Mietpreis-Vorhersage für Berlin
+![Python](https://img.shields.io/badge/Python-3.9%2B-blue?style=for-the-badge&logo=python)
+![Scikit-Learn](https://img.shields.io/badge/scikit--learn-%23F7931E?style=for-the-badge&logo=scikit-learn)
+![Pandas](https://img.shields.io/badge/pandas-%23150458.svg?style=for-the-badge&logo=pandas)
+![LightGBM](https://img.shields.io/badge/LightGBM-2B2E34?style=for-the-badge&logo=lightgbm)
 
-![Python](https://img.shields.io/badge/Python-3.9%2B-blue?style=for-the-badge&logo=python )
-![Scikit-Learn](https://img.shields.io/badge/scikit--learn-%23F7931E?style=for-the-badge&logo=scikit-learn )
-![Pandas](https://img.shields.io/badge/pandas-%23150458.svg?style=for-the-badge&logo=pandas )
-![XGBoost](https://img.shields.io/badge/xgboost-%23313884.svg?style=for-the-badge&logo=xgboost )
-
-Dieses Projekt entwickelt ein robustes Machine-Learning-Modell zur Vorhersage von Wohnungskaltmieten in Berlin und deckt dabei den gesamten Data-Science-Workflow ab.
+Ein Data-Science-Projekt zur Vorhersage von Wohnungskaltmieten in Berlin. Der gesamte Workflow von der Datenbereinigung über das Modelltraining bis zur Interpretation wird mit modernen, robusten Methoden abgedeckt.
 
 ## 🎯 Projektübersicht
 
-Das Kernziel ist die Entwicklung eines präzisen Regressionsmodells zur Schätzung der Kaltmiete (`baseRent`) basierend auf Wohnungseigenschaften. Ein besonderer Fokus liegt auf einem methodisch sauberen Vorgehen:
+Dieses Projekt entwickelt ein Machine-Learning-Modell, das die Kaltmiete (`baseRent`) einer Wohnung in Berlin basierend auf ihren Eigenschaften (Wohnfläche, Alter, Zustand, Lage etc.) vorhersagt. Ein besonderer Fokus liegt auf einem methodisch sauberen Vorgehen durch den Einsatz von `scikit-learn`-Pipelines, um Data Leakage zu verhindern, sowie auf der Interpretation des finalen Modells mit SHAP, um die wichtigsten Preistreiber zu identifizieren.
 
--   **Robuste Vorverarbeitung:** Einsatz von `scikit-learn`-Pipelines, um Data Leakage zu verhindern.
--   **Fortgeschrittene Modellierung:** Training und Optimierung eines `XGBoost`-Modells mittels `RandomizedSearchCV`.
--   **Tiefe Modell-Interpretation:** Analyse der wichtigsten Preistreiber mit der SHAP-Bibliothek.
+---
+
+## 🎓 Abgabeinformationen
+
+**Projekt für:** Unternehmenssoftware
+**Abgabedatum:** 25.07.2025, 23:59:59
+**Gruppennummer:** 1
+**Gruppenmitglieder:**
+*   Adnan Salem
+*   Leif Stöhr
+*   Luka Kovacev
+*   Ha Kevin Tran
+
+### 📂 Inhalt des Repositories
+
+*   **`main_analysis.ipynb`**: Das zentrale Jupyter Notebook, das den gesamten Analyseprozess von der Datenladung bis zur finalen Modellinterpretation enthält.
+*   **`data/immo_data.csv`**: Der Rohdatensatz, der für die Analyse verwendet wird.
+*   **`requirements.txt`**: Eine Liste aller Python-Bibliotheken, die zur Ausführung des Notebooks benötigt werden.
+*   **`README.md`**: Diese Datei.
+*   **`presentation.pdf`**: Die finale Präsentation (wird am Tag der Präsentation hochgeladen).
+
+### 🔗 Datenquelle
+
+*   **URL:** [Kaggle - Apartment Rental Offers in Germany](https://www.kaggle.com/datasets/corrieaar/apartment-rental-offers-in-germany/data)
+
+---
+
+## 🛠️ Technischer Workflow & Finale Ergebnisse
+
+Unser Ansatz folgt einem strukturierten End-to-End-Prozess, um robuste und interpretierbare Ergebnisse zu gewährleisten.
+
+1.  **Datenaufbereitung & Feature Engineering:**
+    *   Der Rohdatensatz wurde auf ca. 10.000 Berliner Wohnungsangebote gefiltert und von Ausreißern bereinigt.
+    *   Aus den Rohdaten wurden aussagekräftige Features wie das **Gebäudealter (`age`)**, ein **Neubau-Indikator (`isNew`)** und der **Berliner Bezirk (`bezirk`)** abgeleitet, um dem Modell entscheidenden Kontext zu geben.
+    *   Die Zielvariable (`baseRent`) wurde **log-transformiert**, um die rechtsschiefe Verteilung zu normalisieren und die Modellleistung zu verbessern.
+
+2.  **Systematischer Modellvergleich:**
+    *   Acht verschiedene Modelle (von linear bis zu komplexen Ensembles) wurden mittels 5-facher Kreuzvalidierung systematisch verglichen.
+    *   **Klares Ergebnis:** Gradient-Boosting-Modelle (`LightGBM`, `XGBoost`) zeigten mit einem **R² > 0.76** die mit Abstand höchste Leistungsfähigkeit.
+
+3.  **Hyperparameter-Optimierung & Finale Evaluierung:**
+    *   Das beste Modell (`LightGBM`) wurde mit `RandomizedSearchCV` gezielt optimiert.
+    *   Auf einem ungesehenen Test-Set erreichte unser optimiertes Modell ein **Bestimmtheitsmaß (R²) von 0.79**.
+    *   Das bedeutet, **79% der Varianz in den Mietpreisen** können durch unser Modell erklärt werden.
+    *   Der durchschnittliche absolute Fehler (**MAE**) liegt bei **162,15 €**, was die praktische Anwendbarkeit des Modells unterstreicht.
+
+### ✅ Wichtigste Preistreiber (laut SHAP-Analyse):
+
+Die Interpretation des finalen Modells mit SHAP zeigt klar, welche Faktoren den größten Einfluss auf den Mietpreis haben und bestätigt die logischen Zusammenhänge:
+
+1.  **Wohnfläche (`livingSpace`):** Der mit Abstand wichtigste Faktor. Größere Wohnungen sind erwartungsgemäß teurer.
+2.  **Lage (`bezirk`):** Der Bezirk, in dem sich die Wohnung befindet, ist der zweitwichtigste Treiber. Dies bestätigt die enorme Bedeutung der Makrolage.
+3.  **Gebäudealter (`age`):** Das Alter hat einen signifikanten, nicht-linearen Einfluss. Sehr alte (Altbau) und sehr neue Wohnungen sind tendenziell teurer.
+4.  **Ausstattung (`hasKitchen`, `lift`):** Das Vorhandensein einer Einbauküche und eines Aufzugs sind ebenfalls wichtige, preistreibende Merkmale.
+
+---
 
 ## 🚀 Erste Schritte
 
-Folgen Sie diesen Schritten, um das Projekt lokal auszuführen:
-
-<details>
-<summary><strong>Klicken Sie hier für die detaillierte Installationsanleitung</strong></summary>
+Befolgen Sie diese Schritte, um das Projekt lokal auszuführen:
 
 1.  **Repository klonen:**
-	```bash
+    ```bash
     git clone https://github.com/adnansalem1/berlin_rent_prediction.git
     cd berlin_rent_prediction
     ```
 
-2.  **Datensatz herunterladen:**
-	Der Datensatz stammt von Kaggle: [Apartment Rental Offers in Germany](https://www.kaggle.com/datasets/corrieaar/apartment-rental-offers-in-germany/data ).
-	Laden Sie `immo_data.csv` herunter und legen Sie die Datei im Ordner `data/` ab.
-
-3.  **Virtuelle Umgebung erstellen (Empfohlen):**
-	```bash
+2.  **Virtuelle Umgebung erstellen (Empfohlen):**
+    ```bash
     python3 -m venv venv
     ```
 
-4.  **Umgebung aktivieren:**
-	-   **macOS/Linux:** `source venv/bin/activate`
-	-   **Windows:** `.\venv\Scripts\activate`
+3.  **Umgebung aktivieren:**
+    *   **macOS/Linux:** `source venv/bin/activate`
+    *   **Windows:** `.\venv\Scripts\activate`
 
-5.  **Abhängigkeiten installieren:**
-	```bash
+4.  **Abhängigkeiten installieren:**
+    ```bash
     pip install -r requirements.txt
     ```
 
-6.  **Jupyter Notebook starten:**
-	```bash
+5.  **Jupyter Notebook starten:**
+    ```bash
     jupyter lab
     ```
-	Navigieren Sie zu `berlin_rent_prediction.ipynb` und führen Sie die Zellen aus.
-</details>
+    Navigieren Sie zu `main_analysis.ipynb` und führen Sie die Zellen aus.
 
-## 🛠️ Technischer Workflow
-
-Das Projekt folgt einem strukturierten, sechsstufigen Prozess:
-
-1.  **Datenladung & Exploration (EDA):** Verstehen der Datenverteilungen und fehlender Werte.
-2.  **Feature Engineering:** Erstellung neuer Merkmale wie `age` und Anwendung der Log-Transformation.
-3.  **Pipeline-basierte Vorverarbeitung:** Kapselung von Imputation, Skalierung und Encoding.
-4.  **Modelltraining & Hyperparameter-Tuning:** Optimierung eines `XGBoost`-Modells mit `RandomizedSearchCV`.
-5.  **Robuste Evaluierung:** Bewertung der Leistung auf einem Test-Set mittels MAE, RMSE und R².
-6.  **Modell-Interpretation:** Erklärung der Vorhersagen und Feature-Einflüsse mit SHAP.
-
-## ✅ Ergebnisse & Erreichte Ziele
-
-Das Projekt hat alle gesetzten Ziele erfolgreich umgesetzt und ein leistungsstarkes Vorhersagemodell hervorgebracht.
-
--   **Finale Modellleistung (auf Testdaten):**
-	-   **MAE (Durchschnittlicher Fehler):** ca. 184.30 €
-	-   **R² (Bestimmtheitsmaß):** > 0.83 
-    -   **RMSE (Quadratischer Mittelwertfehler):** ca. 273.36 €
-    -   **Modell:** `XGBoostRegressor` mit optimierten Hyperparametern. 
-    -   **Feature-Importances:** Visualisierung der wichtigsten Merkmale, die die Miete beeinflussen.
-    -   **SHAP-Analyse:** Detaillierte Erklärung der Modellvorhersagen und Identifikation der wichtigsten Einflussfaktoren.
-    -   **Pipeline-basierte Vorverarbeitung:** Sicherstellung der Robustheit und Wiederholbarkeit des Modells.
-    -   **Kreuzvalidierung:** Verwendung von `cv=5` für eine zuverlässige Modellbewertung.
-    -   **Hyperparameter-Optimierung:** Effiziente Suche nach den besten Modellparametern mit `RandomizedSearchCV`.
-    -   **Modell-Interpretation:** Einsatz der SHAP-Bibliothek zur Erklärung der Modellergebnisse.
-    -   **Feature Engineering:** Erstellung von `age` (Alter der Wohnung) und Anwendung der Log-Transformation zur Normalisierung der Daten.
-    -   **Explorative Datenanalyse (EDA):** Visualisierung von Verteilungen, Korrelationen und fehlenden Werten zur fundierten Analyse.
-    -   **Datenbereinigung & Vorverarbeitung:** Systematische Behandlung fehlender Werte und Datentyp-Konvertierung innerhalb einer `scikit-learn`-Pipeline.
-    -   **Einsatz fortgeschrittener Modelle:** Training und Evaluierung von Ensemble-Methoden wie `Random Forest` und `XGBoost`.
-    -   **Robuste Modellbewertung:** Einsatz von Kreuzvalidierung (`cv=5`) während des gesamten Optimierungsprozesses.
-    -   **Hyperparameter-Optimierung:** Effiziente Suche nach den besten Modellparametern mit `RandomizedSearchCV`.
-
-    
--   **Wichtigste Preistreiber (laut SHAP-Analyse):**
-	1. **`livingSpace` (Wohnfläche):** Der mit Abstand wichtigste Faktor. Größere Wohnflächen führen zu deutlich höheren Preisen.
-    2. **`hasKitchen` (Einbauküche vorhanden):** Wohnungen mit Einbauküche erzielen höhere Preise.
-    3. **`age` (Alter):** Neuere Wohnungen sind tendenziell teurer, ältere Objekte drücken den Preis.
-    4. **`lift` (Aufzug vorhanden):** Der Preis steigt, wenn ein Aufzug vorhanden ist.
-    5. **`condition` & `interiorQual` (Zustand & Ausstattung):** Hochwertig sanierte oder gut erhaltene Wohnungen (z. B. „mint condition“, „sophisticated“) wirken sich positiv auf den Preis aus.
+---
 
 <details>
-<summary><strong>Detaillierte Übersicht der erreichten Ziele</strong></summary>
+<summary>🇬🇧 Click here for the English version of this README</summary>
 
-| Zielsetzung                       | Status      | Implementierung                                                                                             |
-| :-------------------------------- | :---------- | :---------------------------------------------------------------------------------------------------------- |
-| **Datenbereinigung & Vorverarbeitung** | ✅ Erledigt | Systematische Behandlung fehlender Werte und Datentyp-Konvertierung innerhalb einer `scikit-learn`-Pipeline. |
-| **Explorative Datenanalyse (EDA)**     | ✅ Erledigt | Visualisierung von Verteilungen, Korrelationen und fehlenden Werten zur fundierten Analyse.                 |
-| **Feature Engineering**           | ✅ Erledigt | Erstellung von `age` und Anwendung der Log-Transformation zur Normalisierung der Daten.                       |
-| **Einsatz fortgeschrittener Modelle** | ✅ Erledigt | Training und Evaluierung von Ensemble-Methoden wie `Random Forest` und `XGBoost`.                           |
-| **Robuste Modellbewertung**       | ✅ Erledigt | Einsatz von Kreuzvalidierung (`cv=5`) während des gesamten Optimierungsprozesses.                             |
-| **Hyperparameter-Optimierung**    | ✅ Erledigt | Effiziente Suche nach den besten Modellparametern mit `RandomizedSearchCV`.                                 |
-| **Modell-Interpretation**         | ✅ Erledigt | Analyse der wichtigsten Preistreiber mit der SHAP-Bibliothek zur Erklärung der Modellergebnisse.            |
+---
+
+# 🏙️ Berlin Rent Prediction: An End-to-End Machine Learning Project
+
+![Python](https://img.shields.io/badge/Python-3.9%2B-blue?style=for-the-badge&logo=python)
+![Scikit-Learn](https://img.shields.io/badge/scikit--learn-%23F7931E?style=for-the-badge&logo=scikit-learn)
+![Pandas](https://img.shields.io/badge/pandas-%23150458.svg?style=for-the-badge&logo=pandas)
+![LightGBM](https://img.shields.io/badge/LightGBM-2B2E34?style=for-the-badge&logo=lightgbm)
+
+A data science project for predicting apartment rental prices in Berlin. The entire workflow, from data cleaning and model training to interpretation, is covered using modern and robust methods.
+
+## 🎯 Project Overview
+
+This project develops a machine learning model that predicts the base rent (`baseRent`) of an apartment in Berlin based on its characteristics (living space, age, condition, location, etc.). A special focus is placed on a methodologically sound approach using `scikit-learn` pipelines to prevent data leakage, as well as on interpreting the final model with SHAP to identify the most important price drivers.
+
+---
+
+## 🎓 Submission Information
+
+**Project for:** Unternehmenssoftware (Enterprise Software)
+**Submission Date:** July 25, 2025, 23:59:59
+**Group Number:** 1
+**Group Members:**
+*   Adnan Salem
+*   Leif Stöhr
+*   Luka Kovacev
+*   Ha Kevin Tran
+
+### 📂 Repository Contents
+
+*   **`main_analysis.ipynb`**: The central Jupyter Notebook containing the entire analysis process, from data loading to final model interpretation.
+*   **`data/immo_data.csv`**: The raw dataset used for the analysis.
+*   **`requirements.txt`**: A list of all Python libraries required to run the notebook.
+*   **`README.md`**: This file.
+*   **`presentation.pdf`**: The final presentation (to be uploaded on the day of the presentation).
+
+### 🔗 Data Source
+
+*   **URL:** [Kaggle - Apartment Rental Offers in Germany](https://www.kaggle.com/datasets/corrieaar/apartment-rental-offers-in-germany/data)
+
+---
+
+## 🛠️ Technical Workflow & Final Results
+
+Our approach follows a structured end-to-end process to ensure robust and interpretable results.
+
+1.  **Data Preparation & Feature Engineering:**
+    *   The raw dataset was filtered to approx. 10,000 apartment listings in Berlin and cleaned of outliers.
+    *   Meaningful features such as **building age (`age`)**, a **new construction indicator (`isNew`)**, and the **Berlin district (`bezirk`)** were derived from the raw data to provide the model with crucial context.
+    *   The target variable (`baseRent`) was **log-transformed** to normalize its right-skewed distribution and improve model performance.
+
+2.  **Systematic Model Comparison:**
+    *   Eight different models (from linear to complex ensembles) were systematically compared using 5-fold cross-validation.
+    *   **Clear Result:** Gradient Boosting models (`LightGBM`, `XGBoost`) showed by far the highest performance with an **R² > 0.76**.
+
+3.  **Hyperparameter-Tuning & Final Evaluation:**
+    *   The best model (`LightGBM`) was specifically optimized using `RandomizedSearchCV`.
+    *   On an unseen test set, our optimized model achieved a **Coefficient of Determination (R²) of 0.79**.
+    *   This means **79% of the variance in rental prices** can be explained by our model.
+    *   The **Mean Absolute Error (MAE)** is **€162.15**, highlighting the model's practical applicability.
+
+### ✅ Key Price Drivers (according to SHAP analysis):
+
+The interpretation of the final model with SHAP clearly shows which factors have the greatest impact on the rental price and confirms logical relationships:
+
+1.  **Living Space (`livingSpace`):** By far the most important factor. Larger apartments are, as expected, more expensive.
+2.  **Location (`bezirk`):** The district where the apartment is located is the second most important driver, confirming the enormous significance of the macro-location.
+3.  **Building Age (`age`):** Age has a significant, non-linear impact. Very old (pre-war) and very new buildings tend to be more expensive.
+4.  **Amenities (`hasKitchen`, `lift`):** The presence of a fitted kitchen and an elevator are also important, price-driving features.
+
+---
+
+## 🚀 Getting Started
+
+Follow these steps to run the project locally:
+
+1.  **Clone the repository:**
+    ```bash
+    git clone https://github.com/adnansalem1/berlin_rent_prediction.git
+    cd berlin_rent_prediction
+    ```
+
+2.  **Create a virtual environment (Recommended):**
+    ```bash
+    python3 -m venv venv
+    ```
+
+3.  **Activate the environment:**
+    *   **macOS/Linux:** `source venv/bin/activate`
+    *   **Windows:** `.\venv\Scripts\activate`
+
+4.  **Install dependencies:**
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+5.  **Start Jupyter Notebook:**
+    ```bash
+    jupyter lab
+    ```
+    Navigate to `main_analysis.ipynb` and run the cells.
 
 </details>
